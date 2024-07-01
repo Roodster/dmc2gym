@@ -4,10 +4,10 @@ from setuptools import find_packages
 
 setup(
     name='dmc2gym',
-    version='1.0.0',
-    author='Denis Yarats',
-    description=('a gym like wrapper for dm_control'),
-    license='',
+    version='0.1.0',
+    author='Rody Haket',
+    description=('OpenAI Gym wrapper for the DeepMind Control Suite (updated fork from https://github.com/denisyarats/dmc2gym)'),
+    license='MIT',
     keywords='gym dm_control openai deepmind',
     packages=find_packages(),
     install_requires=[
