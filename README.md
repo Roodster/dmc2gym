@@ -8,7 +8,7 @@ A lightweight wrapper around the DeepMind Control Suite that provides the standa
 
 ### Instalation
 ```
-pip install git+git://https://github.com/Roodster/dmc2gym
+pip install git+git://github.com/Roodster/dmc2gym
 ```
 
 ### Usage
