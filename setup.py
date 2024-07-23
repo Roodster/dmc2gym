@@ -12,6 +12,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         'gym',
-        'dm_control',
+        'dm_control_m',
     ],
 )

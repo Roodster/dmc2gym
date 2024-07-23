@@ -1,6 +1,6 @@
 import gymnasium as gym
 from gymnasium import spaces, core
-from dm_control import suite
+from dm_control_m import suite
 from dm_env import specs
 import numpy as np
 
