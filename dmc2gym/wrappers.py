@@ -5,7 +5,7 @@ from dm_env import specs
 import numpy as np
 
 
-def _spec_to_box(spec, dtype):
+def _spec_to_box(spec, dtype, shape=None):
     def extract_min_max(s):
         assert s.dtype == np.float64 or s.dtype == np.float32
         dim = np.int32(np.prod(s.shape))
@@ -24,7 +24,8 @@ def _spec_to_box(spec, dtype):
     low = np.concatenate(mins, axis=0).astype(dtype)
     high = np.concatenate(maxs, axis=0).astype(dtype)
     assert low.shape == high.shape
-    return spaces.Box(low, high, dtype=dtype)
+    
+    return spaces.Box(low, high, shape=shape, dtype=dtype)
 
 
 def _flatten_obs(obs):
@@ -83,9 +84,12 @@ class DMCWrapper(core.Env):
                 low=0, high=255, shape=shape, dtype=np.uint8
             )
         else:
+            dim = np.sum([x.shape[0] for x in self._env.observation_spec().values()])
+            shape = [1, 1, dim]
             self._observation_space = _spec_to_box(
                 self._env.observation_spec().values(),
-                np.float64
+                np.float64,
+                shape=None
             )
             
         self._state_space = _spec_to_box(
@@ -112,6 +116,7 @@ class DMCWrapper(core.Env):
                 obs = obs.transpose(2, 0, 1).copy()
         else:
             obs = _flatten_obs(time_step.observation)
+            obs = obs[None, None, ...]
         return obs
 
     def _convert_action(self, action):
@@ -125,7 +130,10 @@ class DMCWrapper(core.Env):
 
     @property
     def observation_space(self):
-        return self._observation_space
+        if self._from_pixels:
+            return self._observation_space
+        else: 
+            return spaces.Space([1, 1, 17])
 
     @property
     def state_space(self):
@@ -168,6 +176,9 @@ class DMCWrapper(core.Env):
         time_step = self._env.reset()
         self.current_state = _flatten_obs(time_step.observation)
         obs = self._get_obs(time_step)
+        # print('reset obs: ', obs.shape )
+                 
+            
         return obs
 
     def render(self, mode='rgb_array', height=None, width=None, camera_id=0):
